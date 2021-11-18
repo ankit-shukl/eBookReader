@@ -4,7 +4,7 @@ from pdf_reader import PDFReader
 from mp3_manager import mp3_manager
 
 class App:
-    def __init__(self, pdf_file_path):
+    def __init__(self):
         self.pdf_reader = PDFReader()
         self.audio_manager = mp3_manager()
         self.viewer = Viewer(self.pdf_reader, self.audio_manager)
@@ -19,7 +19,7 @@ class App:
         
 
 def main():
-    app = App('/home/ankit/Desktop/WS/PDFReader/data/ISLRv2.pdf')
+    app = App()
     app.run()
 
 if __name__ == '__main__':
