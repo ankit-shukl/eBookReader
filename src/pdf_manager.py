@@ -8,8 +8,8 @@ class pdf_manager:
     def set_file_reader(self, file_path):
         self.file_reader.set_file_reader(file_path)
 
-    def get_page_count(self):
-        self.file_reader.get_page_count()
+    def get_page_count(self) -> int:
+        return self.file_reader.get_page_count()
 
     def read_page(self, page_no):
         if self.file_reader is None:

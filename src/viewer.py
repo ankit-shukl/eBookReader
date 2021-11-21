@@ -6,6 +6,8 @@ from pdf_manager import pdf_manager
 from pathlib import Path
 # import asyncio
 from tkinter import filedialog
+import threading
+import time
 
 class Viewer:
     def __init__(self, pdf_manager=None, audio_manager=None):
@@ -36,20 +38,47 @@ class Viewer:
     def show_page(self): 
         if self.pdf_file_path is not None and Path(self.pdf_file_path).is_file():
             self.labltext_page_no.set("Page# " + str(self.page_no) + " / " + str(self.pdf_manager.get_page_count()))
-        if self.pdf_file_path is not None and Path(self.pdf_file_path).is_file():
             page_text = self.pdf_manager.read_page(self.page_no)
             if page_text is not None:                
                 self.labltext_page_content.set(page_text)
-                if len(page_text) > 0:
-                    self.audio_manager.write(page_text, self.page_no)
+                if self.page_no % 8 == 1:
+                    t_list = []
+                    for i in range(4):
+                        w = mp3_manager()
+                        w.set_dir_path(self.audio_manager.get_dir_path())
+                        t = threading.Thread(target=self.audio_manager.write(self.pdf_manager.read_page(self.page_no + i), self.page_no + i))
+                        t_list.append(t)
+                        print("thread_" + str(self.page_no + i) + " created. t=" + str(time.time()))
+                    for i in range(4):
+                        print("thread_" + str(self.page_no + i) + " started. t=" + str(time.time()))
+                        t_list[i].start()
+                    #t_list[0].join()
+                    #print("thread_0 joined. t=" + str(time.time()))
                     self.audio_manager.play(self.page_no)
+                    for i in range(4):
+                        print("thread_" + str(self.page_no + i) + " joined. t=" + str(time.time()))
+                        t_list[i].join()
+                    time.sleep(60)
+                    t_list_2 = []
+                    for i in range(4):
+                        w = mp3_manager()
+                        w.set_dir_path(self.audio_manager.get_dir_path())
+                        t = threading.Thread(target=self.audio_manager.write(self.pdf_manager.read_page(self.page_no + 4 + i), self.page_no + 4 + i))
+                        t_list_2.append(t)
+                        print("thread_" + str(self.page_no + 4 + i) + " created. t=" + str(time.time()))
+                    for i in range(4):
+                        print("thread_" + str(self.page_no + 4 + i) + " started. t=" + str(time.time()))
+                        t_list_2[i].start()
+                    for i in range(4):
+                        print("thread_" + str(self.page_no + 4 + i) + " joined. t=" + str(time.time()))
+                        t_list_2[i].join()
         self.root.mainloop()
 
     def browse_file(self):
         self.pdf_file_path = filedialog.askopenfilename(initialdir = os.getcwd(),title = "Select file",filetypes = (("pdf files","*.pdf"),("all files","*.*")))
         self.pdf_manager.set_file_reader(self.pdf_file_path)
         audio_dir_path = self.pdf_file_path[:self.pdf_file_path.rfind('/')] + '/' + self.pdf_file_path.split('/')[-1].split('.')[0]
-        if os.path.isdir(audio_dir_path) is False:
+        if not os.path.isdir(audio_dir_path):
             print('Creating audio file directory : ' + audio_dir_path)
             os.mkdir(audio_dir_path)
         self.audio_manager.set_dir_path(audio_dir_path)
@@ -58,12 +87,14 @@ class Viewer:
     def next_page(self):
         if self.pdf_file_path is not None and Path(self.pdf_file_path).is_file():
             self.audio_manager.stop_playing()
-            self.page_no += 1
-            self.show_page()
+            if self.page_no < self.pdf_manager.get_page_count():
+                self.page_no += 1
+                self.show_page()
 
     def prev_page(self):
         if self.pdf_file_path is not None and Path(self.pdf_file_path).is_file():
             self.audio_manager.stop_playing()
-            self.page_no -= 1
-            self.show_page()
-    
+            if self.page_no > 1:
+                self.page_no -= 1
+                self.show_page()
+ 

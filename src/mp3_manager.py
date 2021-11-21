@@ -16,6 +16,9 @@ class mp3_manager:
     def set_dir_path(self, dir_path: str) -> None:
         self.mp3_dir_path = dir_path
 
+    def get_dir_path(self) -> str:
+        return self.mp3_dir_path
+
     def get_mp3_file_path(self, page_no: int) -> str:
         return self.mp3_dir_path + '/' + str(page_no) + '.mp3'
 
