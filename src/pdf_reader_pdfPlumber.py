@@ -1,4 +1,3 @@
-#import PyPDF2
 import pdfplumber
 
 class pdf_reader_pdfPlumber:

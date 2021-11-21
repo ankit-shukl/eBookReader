@@ -38,10 +38,11 @@ class Viewer:
             self.labltext_page_no.set("Page# " + str(self.page_no) + " / " + str(self.pdf_manager.get_page_count()))
         if self.pdf_file_path is not None and Path(self.pdf_file_path).is_file():
             page_text = self.pdf_manager.read_page(self.page_no)
-            if page_text is not None and len(page_text) > 0:
-                self.audio_manager.write(page_text, self.page_no)
-                self.audio_manager.play(self.page_no)
+            if page_text is not None:                
                 self.labltext_page_content.set(page_text)
+                if len(page_text) > 0:
+                    self.audio_manager.write(page_text, self.page_no)
+                    self.audio_manager.play(self.page_no)
         self.root.mainloop()
 
     def browse_file(self):

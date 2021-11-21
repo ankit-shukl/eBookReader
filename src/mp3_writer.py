@@ -2,7 +2,6 @@ from pathlib import Path
 import time
 import multiprocessing
 from gtts import gTTS
-from playsound import playsound
 
 class mp3_writer:
     def __init__(self) -> None:
