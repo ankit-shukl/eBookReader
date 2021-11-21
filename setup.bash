@@ -11,7 +11,8 @@ python3 -m venv venv
 echo "Activating virtual environment.."
 source venv/bin/activate
 echo "Installing dependencies.."
-pip3 install PyPDF2
+#pip3 install PyPDF2
+pip3 install pdfPlumber
 pip3 install gtts
 pip3 install playsound
 echo "Done!"
