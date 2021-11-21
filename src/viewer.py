@@ -2,14 +2,14 @@ import os
 from tkinter import *
 from tkinter import ttk
 from mp3_manager import mp3_manager
-from pdf_reader import PDFReader
+from pdf_manager import pdf_manager
 from pathlib import Path
 # import asyncio
 from tkinter import filedialog
 
 class Viewer:
-    def __init__(self, pdf_reader=None, audio_manager=None):
-        self.pdf_reader = pdf_reader
+    def __init__(self, pdf_manager=None, audio_manager=None):
+        self.pdf_manager = pdf_manager
         self.audio_manager = audio_manager
         self.page_no = 1
         self.pdf_file_path = None
@@ -35,9 +35,9 @@ class Viewer:
 
     def show_page(self): 
         if self.pdf_file_path is not None and Path(self.pdf_file_path).is_file():
-            self.labltext_page_no.set("Page# " + str(self.page_no) + " / " + str(self.pdf_reader.page_count))
+            self.labltext_page_no.set("Page# " + str(self.page_no) + " / " + str(self.pdf_manager.get_page_count()))
         if self.pdf_file_path is not None and Path(self.pdf_file_path).is_file():
-            page_text = self.pdf_reader.read_page(self.page_no)
+            page_text = self.pdf_manager.read_page(self.page_no)
             if page_text is not None and len(page_text) > 0:
                 self.audio_manager.write(page_text, self.page_no)
                 self.audio_manager.play(self.page_no)
@@ -46,7 +46,7 @@ class Viewer:
 
     def browse_file(self):
         self.pdf_file_path = filedialog.askopenfilename(initialdir = os.getcwd(),title = "Select file",filetypes = (("pdf files","*.pdf"),("all files","*.*")))
-        self.pdf_reader.set_file_path(self.pdf_file_path)
+        self.pdf_manager.set_file_reader(self.pdf_file_path)
         audio_dir_path = self.pdf_file_path[:self.pdf_file_path.rfind('/')] + '/' + self.pdf_file_path.split('/')[-1].split('.')[0]
         if os.path.isdir(audio_dir_path) is False:
             print('Creating audio file directory : ' + audio_dir_path)
