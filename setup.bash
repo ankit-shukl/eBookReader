@@ -15,6 +15,7 @@ echo "Installing dependencies.."
 pip3 install pdfPlumber
 pip3 install gtts
 pip3 install playsound
+pip3 install PyObjC
 echo "Done!"
 echo "To activate the virtual environment, run the following command:"
 echo "source venv/bin/activate"
