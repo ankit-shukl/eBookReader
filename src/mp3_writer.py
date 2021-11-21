@@ -3,7 +3,6 @@ from gtts import gTTS
 
 class mp3_writer:
     def __init__(self) -> None:
-        self.is_writing = False        
         self.writer = None
         self.mp3_dir_path = None
 
@@ -14,10 +13,6 @@ class mp3_writer:
         return self.mp3_dir_path + '/' + str(page_no) + '.mp3'
 
     def write(self, text: str, mp3_file_path : str):
-        if Path(mp3_file_path).is_file() or self.is_writing:
+        if Path(mp3_file_path).is_file():
             return
-        self.is_writing = True
         gTTS(text=text).save(mp3_file_path)
-
-    def stop_writing(self) -> None:
-        pass

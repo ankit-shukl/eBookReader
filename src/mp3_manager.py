@@ -9,7 +9,6 @@ class mp3_manager:
         self.mp3_dir_path = None
 
     def __del__(self):
-        self.writer.stop_writing()
         self.player.stop_playing()
         pass
 
