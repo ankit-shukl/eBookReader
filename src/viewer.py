@@ -42,21 +42,22 @@ class Viewer:
             if page_text is not None:                
                 self.labltext_page_content.set(page_text)
                 if self.page_no % 4 == 1:
-                    t_list = []
-                    start = time.time()
-                    for i in range(4):
-                        w = mp3_manager()
-                        w.set_dir_path(self.audio_manager.get_dir_path())
-                        t = threading.Thread(target=self.audio_manager.write(self.pdf_manager.read_page(self.page_no + i), self.page_no + i))
-                        t_list.append(t)
-                        print("thread_" + str(self.page_no + i) + " created. t=" + str(time.time() - start))
-                    for i in range(4):
-                        print("thread_" + str(self.page_no + i) + " started. t=" + str(time.time() - start))
-                        t_list[i].start()
-                    for i in range(4):
-                        print("thread_" + str(self.page_no + i) + " joined. t=" + str(time.time() - start))
-                        t_list[i].join()
-                    time.sleep(20)
+                    if not Path(self.audio_manager.get_dir_path() + "/" + str(self.page_no+3) + ".mp3").is_file():
+                        t_list = []
+                        start = time.time()
+                        for i in range(4):
+                            w = mp3_manager()
+                            w.set_dir_path(self.audio_manager.get_dir_path())
+                            t = threading.Thread(target=self.audio_manager.write(self.pdf_manager.read_page(self.page_no + i), self.page_no + i))
+                            t_list.append(t)
+                            print("thread_" + str(self.page_no + i) + " created. t=" + str(time.time() - start))
+                        for i in range(4):
+                            print("thread_" + str(self.page_no + i) + " started. t=" + str(time.time() - start))
+                            t_list[i].start()
+                        for i in range(4):
+                            print("thread_" + str(self.page_no + i) + " joined. t=" + str(time.time() - start))
+                            t_list[i].join()
+                        time.sleep(20)
                     t_list_2 = []
                     for i in range(4):
                         w = mp3_manager()
